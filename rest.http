@@ -1,0 +1,182 @@
+@baseUrl = http://localhost:4000
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGI3ZjEzZjMyYjA2N2IzYjZlZjMyZjgiLCJ1c2VyUm9sZSI6IlVTRVIiLCJpYXQiOjE2ODk5Mjg5NjUsImV4cCI6MTY5MDAxNTM2NX0.IP1gymCvrtaQegXCFU9Z8f-wxzad3YdwM0z357n3Anc
+
+###
+
+POST {{baseUrl}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "email1@gmail.com",
+  "password": "123123"
+}
+
+####
+
+POST {{baseUrl}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "email": "email",
+  "password": "123456",
+  "confirmPassword": "1888888",
+  "name": "pham tu",
+  "phone": "0389119"
+}
+
+###
+
+DELETE  {{baseUrl}}/auth/logout HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/auth/refresh-token HTTP/1.1
+content-type: application/json
+
+
+##################################################################
+
+GET {{baseUrl}}/cars HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/cars HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "model": "Toyota",
+  "color": "đen",
+  "plate": "30B 33333"
+}
+
+###
+
+@carId = 64b612cc526955be3127af10
+
+GET {{baseUrl}}/cars/{{carId}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+PUT {{baseUrl}}/cars/{{carId}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "model": "Toyota",
+  "color": "đỏ",
+  "plate": "30B 23432",
+  "isDefault": "true"
+}
+
+###
+DELETE {{baseUrl}}/cars/{{carId}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+
+##################################################################
+
+GET {{baseUrl}}/addresses HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/addresses HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "formatted_address": "Tiến Bào, Phù Khê, Từ Sơn, Bắc Ninh",
+  "name": "Tiến Bào",
+  "place_id": "adsfsfadfdsf",
+  "location": {
+    "lat": 20.0,
+    "lng": 150.0
+  },
+  "compound": {
+    "province": "Bắc Ninh",
+    "commune": "Từ Sơn",
+    "district": "Phù Khê"
+  }, 
+  "isDefault": "true"
+}
+
+###
+
+@addressId = 64b668ec4f348bd80d26cc6b
+
+GET {{baseUrl}}/addresses/{{addressId}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+PUT {{baseUrl}}/addresses/{{addressId}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+
+{
+  "formatted_address": "Tiến Bào, Phù Khê, Từ Sơn, Bắc Ninh",
+  "name": "Tiến Bào",
+  "place_id": "wwww",
+  "location": {
+    "lat": 20.0,
+    "lng": 150.0
+  },
+  "compound": {
+    "province": "Bắc Ninh",
+    "commune": "Từ Sơn",
+    "district": "Phù Khê"
+  }, 
+  "isDefault": "true"
+}
+
+###
+DELETE {{baseUrl}}/addresses/{{addressId}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+######################################################################
+
+GET {{baseUrl}}/users HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+GET {{baseUrl}}/users/profile HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+#### 
+
+PUT {{baseUrl}}/users/profile HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "pham tu",
+  "dob": "2000/12/20"
+}
+
+###################################################################3
+
+GET {{baseUrl}}/trips HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+DELETE {{baseUrl}}/trips/64b83b76402731fd48cb8b9b HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+
+
+
+

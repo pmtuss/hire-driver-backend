@@ -13,11 +13,11 @@ const locationSchema = Joi.object<ICoordinate>({
 })
 
 const create = Joi.object<IAddress>({
-  compound: compoundSchema,
+  // compound: compoundSchema,
   location: locationSchema,
   formatted_address: Joi.string().required(),
   name: Joi.string().required(),
-  place_id: Joi.string().required(),
+  // place_id: Joi.string().required(),
   isDefault: Joi.boolean().default(false),
 })
 

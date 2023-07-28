@@ -6,8 +6,13 @@ const updateProfile = Joi.object<IUser>({
   dob: Joi.date(),
 })
 
+const updateAvatar = Joi.object({
+  avatar: Joi.string().required(),
+})
+
 const userSchema = {
   updateProfile: updateProfile,
+  updateAvatar,
 }
 
 export default userSchema

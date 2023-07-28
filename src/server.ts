@@ -1,4 +1,7 @@
 import express from 'express'
+import http from 'http'
+import { Server } from 'socket.io'
+
 import mongoose from 'mongoose'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -6,6 +9,7 @@ import cookieParser from 'cookie-parser'
 import { config } from './config/config'
 
 import routes from './routes'
+import socketio from './config/socketio'
 
 const app = express()
 
@@ -26,7 +30,7 @@ const startServer = () => {
   app.use(morgan('dev'))
 
   app.use(express.urlencoded({ extended: true }))
-  app.use(express.json())
+  app.use(express.json({ limit: '10mb' }))
   app.use(cookieParser())
 
   app.use(
@@ -37,7 +41,6 @@ const startServer = () => {
         'http://localhost:3001',
         'http://10.78.79.26:3001',
         'http://10.78.79.103:3001',
-
         'http://192.168.0.103:3001',
       ],
       credentials: true,
@@ -52,7 +55,10 @@ const startServer = () => {
     res.send('alo')
   })
 
-  app.listen(config.server.port, () => {
+  const server = http.createServer(app)
+  socketio(server)
+
+  server.listen(config.server.port, () => {
     console.log(`Server is running at port: ${config.server.port}`)
   })
 }

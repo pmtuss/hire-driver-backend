@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import { IUser } from '../models/user.model'
+import { Role } from '../constants/enum'
 
 export interface LoginDto {
   email: string
@@ -29,5 +30,6 @@ export const authSchema = {
       .messages({
         'string.pattern.base': 'Invalid phone number',
       }),
+    role: Joi.string().valid(Role.DRIVER, Role.PASSENGER),
   }),
 }

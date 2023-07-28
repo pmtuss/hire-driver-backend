@@ -8,7 +8,7 @@ export const createAddress = async (
   next: NextFunction
 ) => {
   try {
-    const { userId } = req
+    const { userId } = req.user!
     const address: IAddress = req.body
 
     // set other cars is not default if newCar set is default
@@ -49,7 +49,7 @@ export const getAddresses = async (
   next: NextFunction
 ) => {
   try {
-    const { userId } = req
+    const { userId } = req.user!
 
     const addresses = await AddressModel.find({
       user: userId,
@@ -67,7 +67,7 @@ export const getAddress = async (
   next: NextFunction
 ) => {
   try {
-    const { userId } = req
+    const { userId } = req.user!
     const { id } = req.params
 
     const address = await AddressModel.findOne({ _id: id, user: userId })
@@ -88,7 +88,7 @@ export const updateAddress = async (
   next: NextFunction
 ) => {
   try {
-    const { userId } = req
+    const { userId } = req.user!
     const { id } = req.params
 
     const address: IAddress = req.body
@@ -128,7 +128,7 @@ export const deleteAddress = async (
   next: NextFunction
 ) => {
   try {
-    const { userId } = req
+    const { userId } = req.user!
     const { id } = req.params
 
     const address = await AddressModel.findOne({

@@ -1,8 +1,6 @@
 import express, { ErrorRequestHandler } from 'express'
 import createError from 'http-errors'
 
-import authorRoutes from './author.route'
-import bookRoutes from './book.route'
 import authRoutes from './auth.route'
 import carRoutes from './car.route'
 import addressRoutes from './address.route'
@@ -13,13 +11,11 @@ import { authMiddleware } from '../middleware/authMiddleware'
 
 const router = express.Router()
 
-router.use('/auth', authRoutes)
-router.use('/authors', authorRoutes)
-router.use('/books', bookRoutes)
-router.use('/cars', authMiddleware, carRoutes)
-router.use('/addresses', authMiddleware, addressRoutes)
-router.use('/users', authMiddleware, userRoutes)
-router.use('/trips', authMiddleware, tripRoutes)
+router.use('/api/auth', authRoutes)
+router.use('/api/cars', authMiddleware, carRoutes)
+router.use('/api/addresses', authMiddleware, addressRoutes)
+router.use('/api/users', authMiddleware, userRoutes)
+router.use('/api/trips', authMiddleware, tripRoutes)
 
 router.get('/test', (req, res) => {
   res.send('alo')

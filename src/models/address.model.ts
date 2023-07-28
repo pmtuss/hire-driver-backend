@@ -35,10 +35,10 @@ export const CompoundSchema = new Schema<ICompound>(
 // Address
 export interface IAddress {
   formatted_address: string
-  place_id: string
+  // place_id: string
   name: string
   location: ICoordinate
-  compound: ICompound
+  // compound: ICompound
   isDefault: boolean
   user: Types.ObjectId
 }
@@ -51,10 +51,10 @@ export const AddressSchema = new Schema<IAddressModel>(
       type: String,
       require: true,
     },
-    place_id: {
-      type: String,
-      require: true,
-    },
+    // place_id: {
+    //   type: String,
+    //   require: true,
+    // },
     name: {
       type: String,
       require: true,
@@ -63,10 +63,10 @@ export const AddressSchema = new Schema<IAddressModel>(
       type: CoordinateSchema,
       required: true,
     },
-    compound: {
-      type: CompoundSchema,
-      required: true,
-    },
+    // compound: {
+    //   type: CompoundSchema,
+    //   required: true,
+    // },
     isDefault: { type: Boolean, default: false },
     user: { type: Schema.Types.ObjectId, ref: 'User', require: true },
   },

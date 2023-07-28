@@ -32,7 +32,15 @@ export const getUserInfoById = async (
       return res.status(404).json({ message: 'Not found' })
     }
 
-    return res.status(200).json({ user })
+    const resUser = {
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      dob: user.dob ? new Date(user.dob).toLocaleDateString() : '',
+      avatar: user.avatar,
+    }
+
+    return res.status(200).json(resUser)
   } catch (error) {
     res.status(500).json({ error })
   }
@@ -44,7 +52,7 @@ export const getInfo = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId
+    const { userId } = req.user!
 
     const user = await UserModel.findById(userId)
 
@@ -57,6 +65,7 @@ export const getInfo = async (
       name: user.name,
       phone: user.phone,
       dob: user.dob ? new Date(user.dob).toLocaleDateString() : '',
+      avatar: user.avatar,
     }
 
     return res.status(200).json(resUser)
@@ -71,11 +80,9 @@ export const updateInfo = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId
+    const { userId } = req.user!
 
     const { name, dob } = req.body
-
-    console.log(dob)
 
     const user = await UserModel.findOneAndUpdate(
       { _id: userId },
@@ -90,6 +97,33 @@ export const updateInfo = async (
     }
 
     return res.status(200).json({ message: 'Updated successfully' })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+}
+
+export const updateAvatar = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.user!
+
+    const { avatar } = req.body
+
+    const user = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        avatar: avatar,
+      }
+    )
+
+    if (!user) {
+      return res.status(404).json({ message: 'Not found' })
+    }
+
+    return res.status(200).json({ message: 'Updated avatar successfully' })
   } catch (error) {
     res.status(500).json({ error })
   }

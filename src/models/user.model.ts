@@ -9,6 +9,7 @@ export interface IUser {
   phone: string
   dob: string
   role: string
+  avatar: string
 }
 
 export interface IUserModel extends IUser, Document {}
@@ -34,6 +35,7 @@ const UserSchema: Schema = new Schema({
     enum: Object.values(Role),
     default: Role.PASSENGER,
   },
+  avatar: { type: String },
 })
 
 UserSchema.pre('save', async function () {

@@ -15,13 +15,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     const existingUser = await UserModel.findOne({ email })
 
     if (existingUser)
-      return res.status(409).json({ error: `Email is already been register` })
-
-    const existingMobile = await UserModel.findOne({ phone })
-    if (existingMobile)
-      return res
-        .status(409)
-        .json({ error: `Phone number is already been register` })
+      return res.status(409).json({ error: `Email này đã được đăng ký` })
 
     const user = new UserModel({
       email,
@@ -54,12 +48,16 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const user = await UserModel.findOne({ email })
     if (!user) {
-      return res.status(400).json({ error: 'Invalid username or password' })
+      return res
+        .status(400)
+        .json({ error: 'Email hoặc mật khẩu không chính xác' })
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password)
     if (!passwordMatch) {
-      return res.status(400).json({ error: 'Invalid username or password' })
+      return res
+        .status(400)
+        .json({ error: 'Email hoặc mật khẩu không chính xác' })
     }
 
     const { accessSecret, accessExpiresIn } = config.jwt

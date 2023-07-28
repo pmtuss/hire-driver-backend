@@ -1,9 +1,21 @@
 import mongoose, { Date, Document, Schema, Types } from 'mongoose'
 import { AddressSchema, CoordinateSchema, ICoordinate } from './address.model'
-import { Status } from '../constants/enum'
+import { TripStatus } from '../constants/enum'
+
+const carSchema = new Schema(
+  {
+    model: { type: String },
+    color: { type: String },
+    plate: { type: String },
+  },
+  {
+    _id: false,
+    versionKey: false,
+  }
+)
 
 export interface ITrip {
-  user?: Types.ObjectId
+  passenger?: Types.ObjectId
   driver?: Types.ObjectId
 
   endAt?: Date
@@ -17,18 +29,23 @@ export interface ITrip {
   distance: string
   duration: string
   route: string
-  carId: string
+
+  car: {
+    model: string
+    color: string
+    plate: string
+  }
 
   cost: number
   rate?: number
-  status?: Status
+  status?: TripStatus
 }
 
 export interface ITripModel extends ITrip, Document {}
 
 const TripModel = new Schema<ITripModel>(
   {
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    passenger: { type: Schema.Types.ObjectId, ref: 'User' },
     driver: { type: Schema.Types.ObjectId, ref: 'User' },
 
     startAt: { type: Date },
@@ -45,12 +62,12 @@ const TripModel = new Schema<ITripModel>(
     route: { type: String },
     distance: { type: String },
     duration: { type: String },
-    carId: { type: String },
+    car: { type: carSchema },
 
     status: {
       type: String,
-      enum: Object.values(Status),
-      default: Status.Created,
+      enum: Object.values(TripStatus),
+      default: TripStatus.CREATED,
     },
   },
   { timestamps: true }

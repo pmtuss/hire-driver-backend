@@ -12,7 +12,7 @@ export const getCars = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId
+    const { userId } = req.user!
 
     const user = await UserModel.findById(userId)
     if (!user) res.status(401).json({ error: 'aaaaaaaaaaaaa' })
@@ -31,7 +31,7 @@ export const getCar = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId
+    const { userId } = req.user!
     const carId = req.params.id
 
     const car = await CarModel.findOne({
@@ -57,7 +57,7 @@ export const createCar = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId
+    const { userId } = req.user!
     const car: ICar = req.body
 
     // set other cars is not default if newCar set is default
@@ -91,7 +91,7 @@ export const updateCar = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId
+    const { userId } = req.user!
     const carId = req.params.id
 
     const carUpdate: Omit<ICar, 'user'> = req.body
@@ -126,7 +126,7 @@ export const deleteCar = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.userId
+    const { userId } = req.user!
     const carId = req.params.id
 
     const car = await CarModel.findOne({

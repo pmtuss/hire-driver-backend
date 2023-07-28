@@ -2,13 +2,18 @@ import { Request, Response, NextFunction } from 'express'
 
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { config } from '../config/config'
+import { Types } from 'mongoose'
 
 interface TokenPayload extends JwtPayload {
-  userId: string
+  userId: Types.ObjectId
+  role: string
 }
 
 export interface CustomRequest extends Request {
-  userId?: string
+  user?: {
+    userId: Types.ObjectId
+    role: string
+  }
 }
 
 export const authMiddleware = (
@@ -27,7 +32,7 @@ export const authMiddleware = (
 
   try {
     const decodedToken = jwt.verify(token, secret) as TokenPayload
-    req.userId = decodedToken.userId
+    req.user = { userId: decodedToken.userId, role: decodedToken.userRole }
     next()
   } catch (error: any) {
     res.status(401).json({ message: error.message })

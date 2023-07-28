@@ -2,6 +2,7 @@
   "name": "ts-backend",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "src/server.ts",
   "scripts": {
     "start": "nodemon src/server.ts"

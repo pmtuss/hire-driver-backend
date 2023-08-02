@@ -1,7 +1,8 @@
 import { Server, Socket } from 'socket.io'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { config } from './config'
-import { Role } from '../constants/enum'
+import { Role, TripStatus } from '../constants/enum'
+import TripModel from '../models/trip.model'
 
 interface TokenPayload extends JwtPayload {
   userId: string
@@ -58,18 +59,6 @@ const socketio = (server: any) => {
       console.log('A client disconneted: ', socket.id)
     })
 
-    // socket.on('driver-connect', (coordinate) => {
-    //   console.log('A driver connected: ', socket.id, coordinate)
-    //   drivers.set(socket.user?.userId, socket.id)
-    //   console.log(drivers)
-    // })
-
-    // socket.on('driver-disconnect', (payload) => {
-    //   console.log('A driver disconnected: ', socket.id, payload)
-    //   drivers.delete(socket.user?.userId)
-    //   console.log(drivers)
-    // })
-
     socket.on('requestTrip', (data) => {
       console.log('requestTrip', drivers)
       let i = 0
@@ -82,35 +71,47 @@ const socketio = (server: any) => {
       })
     })
 
-    socket.on('acceptTrip', (passengerId) => {
-      io.to(passengers.get(passengerId)).emit('tripAccepted', {
-        user: socket.user,
+    socket.on('acceptTrip', (data) => {
+      io.to(passengers.get(data.passenger)).emit('tripAccepted', {
+        ...data,
+        driver: socket.user?.userId,
       })
     })
 
-    socket.on('arriveStart', (passengerId) => {
-      console.log('arriveStart')
-      io.to(passengers.get(passengerId)).emit('driverArrived', {
-        user: socket.user,
-      })
+    socket.on('arriveStart', async (data) => {
+      const { passenger, _id } = data
+      const updatedTrip = await TripModel.findOneAndUpdate(
+        { _id },
+        { status: TripStatus.ARRIVED_START },
+        { new: true }
+      )
+      io.to(passengers.get(passenger)).emit('driverArrived', updatedTrip)
     })
 
-    socket.on('startTrip', (passengerId) => {
+    socket.on('startTrip', async (data) => {
+      const { passenger, _id } = data
+      const updatedTrip = await TripModel.findOneAndUpdate(
+        { _id },
+        { status: TripStatus.RUNNING },
+        { new: true }
+      )
       console.log('startTrip')
-      io.to(passengers.get(passengerId)).emit('tripStart', {
-        user: socket.user,
-      })
+      io.to(passengers.get(passenger)).emit('tripStart', updatedTrip)
     })
 
-    socket.on('finishTrip', (passengerId) => {
-      console.log('finishTrip')
-      io.to(passengers.get(passengerId)).emit('tripFinished', {
-        user: socket.user,
-      })
+    socket.on('finishTrip', async (data) => {
+      const { passenger, _id } = data
+      const updatedTrip = await TripModel.findOneAndUpdate(
+        { _id },
+        { status: TripStatus.FINISHED },
+        { new: true }
+      )
+      io.to(passengers.get(passenger)).emit('tripFinished', updatedTrip)
     })
 
     socket.on('updateDriverLocation', (data) => {
-      socket.emit('dirverLocationUpdated', { a: 'alo' })
+      const { passengerId, location } = data
+      io.to(passengers.get(passengerId)).emit('driverLocation', location)
     })
   })
 }

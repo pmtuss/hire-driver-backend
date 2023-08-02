@@ -33,7 +33,6 @@ export const getUserInfoById = async (
     }
 
     const resUser = {
-      email: user.email,
       name: user.name,
       phone: user.phone,
       dob: user.dob ? new Date(user.dob).toLocaleDateString() : '',

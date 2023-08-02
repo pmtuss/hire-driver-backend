@@ -5,4 +5,4 @@ const authSchema = Joi.object({
   password: Joi.string().min(6).required(),
 })
 
-export = { authSchema }
+export { authSchema }

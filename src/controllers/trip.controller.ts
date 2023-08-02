@@ -83,7 +83,7 @@ export const updateTrip = async (
   try {
     const { id } = req.params
 
-    const trip: ITrip = req.body
+    const trip: Partial<ITrip> = req.body
 
     const updatedTrip = await TripModel.findOneAndUpdate(
       { _id: id },
@@ -148,8 +148,14 @@ export const acceptTrip = async (
       return res.status(404).json({ error: 'Trip does not exist!' })
     }
 
+    if (trip.status === TripStatus.CANCELED) {
+      return res.status(400).json({ error: 'The trip is canceled' })
+    }
+
     if (trip.status !== TripStatus.CREATED) {
-      return res.status(400).json({ error: 'Unable to accept the trip!' })
+      return res
+        .status(400)
+        .json({ error: 'The trip is accepted by other driver!' })
     }
 
     trip.status = TripStatus.ACCEPTED
@@ -158,6 +164,60 @@ export const acceptTrip = async (
     await trip.save()
 
     res.status(200).json({ message: 'The trip has been accepted' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getAccepableTrips = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId, role } = req.user!
+
+    if (role === Role.PASSENGER) {
+      return res.status(400).json({ error: 'You cannot access this route' })
+    }
+
+    const trips = await TripModel.find({
+      status: TripStatus.CREATED,
+    })
+
+    res.status(200).json(trips)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getCurrentTrip = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId, role } = req.user!
+
+    let trip
+
+    if (role === Role.PASSENGER) {
+      trip = await TripModel.findOne({
+        passenger: userId,
+        status: {
+          $nin: [TripStatus.FINISHED, TripStatus.CANCELED],
+        },
+      })
+    } else if (role === Role.DRIVER) {
+      trip = await TripModel.findOne({
+        driver: userId,
+        status: {
+          $nin: [TripStatus.FINISHED, TripStatus.CANCELED],
+        },
+      })
+    }
+
+    res.status(200).json(trip)
   } catch (error) {
     next(error)
   }

@@ -6,6 +6,7 @@ dotenv.config()
 
 // const MONGO_URL = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.cyvqald.mongodb.net/`
 const MONGO_URL = process.env.MONGO_URL || ''
+const FRONTEND_URL = process.env.FRONTEND_URL || ''
 
 const SERVER_PORT = parseInt('' + process.env.SERVER_PORT) || 4000
 
@@ -18,6 +19,7 @@ export const config = {
   mongo: {
     url: MONGO_URL,
   },
+  frontend: FRONTEND_URL,
   server: {
     port: SERVER_PORT,
   },

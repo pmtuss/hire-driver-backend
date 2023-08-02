@@ -42,6 +42,7 @@ const startServer = () => {
         'http://10.78.79.26:3001',
         'http://10.78.79.103:3001',
         'http://192.168.0.103:3001',
+        'https://hire-driver-fe.onrender.com',
       ],
       credentials: true,
     })

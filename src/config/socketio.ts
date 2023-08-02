@@ -60,7 +60,6 @@ const socketio = (server: any) => {
     })
 
     socket.on('requestTrip', (data) => {
-      console.log('requestTrip', drivers)
       let i = 0
       drivers.forEach((val, key) => {
         console.log('drivers', key, val)
@@ -75,6 +74,11 @@ const socketio = (server: any) => {
       io.to(passengers.get(data.passenger)).emit('tripAccepted', {
         ...data,
         driver: socket.user?.userId,
+      })
+
+      drivers.forEach((val, key) => {
+        if (key === socket.user?.userId) return
+        io.to(val).emit('deleteTrip', { _id: data._id })
       })
     })
 
@@ -112,6 +116,16 @@ const socketio = (server: any) => {
     socket.on('updateDriverLocation', (data) => {
       const { passengerId, location } = data
       io.to(passengers.get(passengerId)).emit('driverLocation', location)
+    })
+
+    socket.on('cancelTrip', (data) => {
+      const { _id } = data
+      console.log(data)
+      drivers.forEach((val, key) => {
+        io.to(val).emit('deleteTrip', {
+          _id,
+        })
+      })
     })
   })
 }
